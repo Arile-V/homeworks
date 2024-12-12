@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/play.css">
+</head>
+<body>
+    <header id="tab">
+        <div class="info">
+            <img id="logo" src="../img/logo.png" alt="logo">
+            <span id="web-name">我的网站</span>
+        </div>
+        <div class="navbar">
+            <div class="tab-item">
+                <a href="" onclick="" >首页</a>
+            </div>
+            <div class="tab-item">
+                <a href="" onclick="">分类</a>
+            </div>
+            <div class="tab-item-active">
+                <a href="" onclick="">播放列表</a>
+            </div>
+            <div class="tab-item">
+                <a href="" onclick="">我的</a>
+            </div>
+        </div>
+
+    </header>
+    <div id="main">
+        <ul id="list" onload="load()">
+        </ul>
+    </div>
+    <div id="footer">
+        <audio id="audio" src="../audio/1.mp3" controls></audio>
+    </div>
+</body>
+</html>
+<script src="../js/play.js">
+    function load(){
+        let ul = document.getElementById("list");
+        let li = localStorage.getItem("list");
+        let Li = JSON.parse(li);
+        for(let i = 0; i < Li.length; i++){
+            let li = document.createElement("li");
+            li.innerHTML = Li[i];
+        }
+    }
+    function play(){
+        let ul = document.getElementById("list");
+        let lis = ul.getElementsByTagName("li");
+        for(let i = 0; i < lis.length; i++){
+            lis[i].onclick = function(){
+                let audio = document.getElementById("audio");
+                audio.src = "../audio/" + lis[i].innerHTML;
+                audio.play();
+            }
+        }
+    }
+    //部分特性的代码可以嵌入，共性代码新建一个和html同名的js文件
+</script>

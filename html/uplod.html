@@ -1,0 +1,39 @@
+<!--这个html用于传mp3文件，后续如果有其他类型数据同样不要写死在代码里面-->
+<!--暂时使用前端本地存储实现，后面可以转流媒体-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/uplod.css">
+</head>
+<body>
+    <form onsubmit="" enctype="multipart/form-data">
+        <label for="file">上传MP3:</label>
+        <input type="file" name="file" accept="audio/mpeg">
+        <input type="submit" value="上传">
+    </form>
+</body>
+<script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();// 阻止表单默认提交
+        const fileInput = document.querySelector('input[type="file"]');
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const audioData = e.target.result;
+            // 将音频数据存储到本地
+            const audio = {
+                name: file.name,
+                data: audioData
+            }
+            localStorage.setItem('list', audio.name);
+            localStorage.setItem('audioData', audio.data);
+        };
+        reader.readAsDataURL(file);
+    });
+</script>
+</html>
