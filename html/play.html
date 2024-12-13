@@ -39,6 +39,7 @@
 </body>
 </html>
 <script>
+
     const request1 = window.indexedDB.open('audioDB', 1);
     
     request1.onupgradeneeded = function(event) {
@@ -70,4 +71,40 @@
             });
         }; 
     }
+
+
+    // 保存音乐播放状态
+function saveMusicState() {
+    const music = document.getElementById('music');
+    const currentTime = music.currentTime;
+    const paused = music.paused;
+ 
+    // 保存当前播放时间
+    localStorage.setItem('musicCurrentTime', currentTime);
+    // 保存播放器是否暂停
+    localStorage.setItem('musicPaused', paused);
+}
+ 
+// 页面刷新前调用saveMusicState函数保存状态
+window.onbeforeunload = saveMusicState;
+
+// 恢复音乐播放状态
+function restoreMusicState() {
+    const currentTime = localStorage.getItem('musicCurrentTime');
+    const paused = localStorage.getItem('musicPaused');
+ 
+    if (currentTime !== null && paused !== null) {
+        const music = document.getElementById('music');
+        music.currentTime = parseFloat(currentTime);
+        if (paused === 'true') {
+            music.pause();
+        } else {
+            music.play();
+        }
+    }
+}
+ 
+// 页面加载完成后恢复音乐状态
+window.addEventListener('load', restoreMusicState);
+window.addEventListener('load', load);
 </script>
