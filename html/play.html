@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../css/play.css">
+    <link rel="stylesheet" href="./css/play.css">
 </head>
 <body>
     <header id="tab">
@@ -13,7 +13,7 @@
             <img id="logo" src="../img/logo.png" alt="logo">
             <span id="web-name">我的网站</span>
         </div>
-        <div class="navbar">
+        <div class="navbar" onclick="load()">
             <div class="tab-item">
                 <a href="" onclick="" >首页</a>
             </div>
@@ -30,34 +30,44 @@
 
     </header>
     <div id="main">
-        <ul id="list" onload="load()">
+        <ul id="list" onload=load()>
         </ul>
     </div>
     <div id="footer">
-        <audio id="audio" src="../audio/1.mp3" controls></audio>
+        <audio id="audio"  controls></audio>
     </div>
 </body>
 </html>
-<script src="../js/play.js">
-    function load(){
-        let ul = document.getElementById("list");
-        let li = localStorage.getItem("list");
-        let Li = JSON.parse(li);
-        for(let i = 0; i < Li.length; i++){
-            let li = document.createElement("li");
-            li.innerHTML = Li[i];
-        }
+<script>
+    const request1 = window.indexedDB.open('audioDB', 1);
+    
+    request1.onupgradeneeded = function(event) {
+      const db = event.target.result;
+      const objectStore = db.createObjectStore('audioFiles', { keyPath: 'id' });
+      objectStore.createIndex('name', 'name', { unique: true });
+      objectStore.createIndex('data', 'data', { unique: false });
+    };
+    function load() {
+        const db = request1.result;
+        const transaction = db.transaction(['audioFiles'], 'readonly');
+        const objectStore = transaction.objectStore('audioFiles');
+        const request = objectStore.getAll();
+    
+        request.onsuccess = function(event) {
+            const files = event.target.result;
+            const list = document.getElementById('list');
+            list.innerHTML = '';
+    
+            files.forEach(file => {
+                const li = document.createElement('li');
+                li.textContent = file.name;
+                li.onclick = function() {
+                    const audio = document.getElementById('audio');
+                    audio.src = URL.createObjectURL(new Blob([file.data], { type: 'audio/mpeg' }));
+                    audio.play();
+                };
+                list.appendChild(li);
+            });
+        }; 
     }
-    function play(){
-        let ul = document.getElementById("list");
-        let lis = ul.getElementsByTagName("li");
-        for(let i = 0; i < lis.length; i++){
-            lis[i].onclick = function(){
-                let audio = document.getElementById("audio");
-                audio.src = "../audio/" + lis[i].innerHTML;
-                audio.play();
-            }
-        }
-    }
-    //部分特性的代码可以嵌入，共性代码新建一个和html同名的js文件
 </script>

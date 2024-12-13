@@ -7,33 +7,84 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../css/uplod.css">
+    <link rel="stylesheet" href="./css/uplod.css">
 </head>
-<body>
-    <form onsubmit="" enctype="multipart/form-data">
+<body >
+    <form onsubmit="upload()" enctype="multipart/form-data">
         <label for="file">上传MP3:</label>
         <input type="file" name="file" accept="audio/mpeg">
         <input type="submit" value="上传">
     </form>
+    <div id="main" onclick="load()">
+        <ul id="list" >
+        </ul>
+    </div>
+    <div id="footer">
+        <audio id="audio"  controls></audio>
+    </div>
 </body>
 <script>
-    const form = document.querySelector('form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();// 阻止表单默认提交
+    
+    const request1 = window.indexedDB.open('audioDB', 1);
+    
+    request1.onupgradeneeded = function(event) {
+      const db = event.target.result;
+      const objectStore = db.createObjectStore('audioFiles', { keyPath: 'id' });
+      objectStore.createIndex('name', 'name', { unique: true });
+      objectStore.createIndex('data', 'data', { unique: false });
+    };
+    
+    function upload(){
+        event.preventDefault();
         const fileInput = document.querySelector('input[type="file"]');
         const file = fileInput.files[0];
         const reader = new FileReader();
-        reader.onload = function(e) {
-            const audioData = e.target.result;
-            // 将音频数据存储到本地
-            const audio = {
-                name: file.name,
-                data: audioData
-            }
-            localStorage.setItem('list', audio.name);
-            localStorage.setItem('audioData', audio.data);
-        };
-        reader.readAsDataURL(file);
-    });
+        reader.onload = function(event) {
+            
+            const audioData = event.target.result;
+            const db = request1.result;
+            const transaction = db.transaction(['audioFiles'], 'readwrite');
+            const objectStore = transaction.objectStore('audioFiles');
+            const request = objectStore.add({ id: file.name, name: file.name, data: audioData });
+            request.onsuccess = function(event) {
+                alert('文件上传成功');
+                load();
+            };
+            request.onerror = function(event) {
+                alert('文件上传失败');
+            };
+        }
+        reader.readAsArrayBuffer(file);
+    }
+    
+
+function load() {
+    const db = request1.result;
+    const transaction = db.transaction(['audioFiles'], 'readonly');
+    const objectStore = transaction.objectStore('audioFiles');
+    const request = objectStore.getAll();
+
+    request.onsuccess = function(event) {
+        const files = event.target.result;
+        const list = document.getElementById('list');
+        list.innerHTML = '';
+
+        files.forEach(file => {
+            const li = document.createElement('li');
+            li.textContent = file.name;
+            li.onclick = function() {
+                const audio = document.getElementById('audio');
+                audio.src = URL.createObjectURL(new Blob([file.data], { type: 'audio/mpeg' }));
+                audio.play();
+            };
+            list.appendChild(li);
+        });
+    }; 
+    }
+    
+
+    
+
+    
 </script>
 </html>
