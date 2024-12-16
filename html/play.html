@@ -66,10 +66,16 @@
                     const li = document.createElement('li');
                     li.textContent = file.name;
                     li.onclick = function() {
+                        act = document.getElementsByClassName('active');
+                        for (let i = 0; i < act.length; i++) {
+                            act[i].classList.remove('active');
+                        }
+                        li.classList.add('active');
                         const audio = document.getElementById('audio');
                         audio.src = URL.createObjectURL(new Blob([file.data], { type: 'audio/mpeg' }));
                         audio.play();
                     };
+                    
                     const Button = document.createElement('button');
                     Button.textContent = '删除';
                     Button.onclick = function() {
