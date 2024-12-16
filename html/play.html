@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cn">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -39,50 +39,67 @@
 </body>
 </html>
 <script>
-
-    const request1 = window.indexedDB.open('audioDB', 1);
+   
     
-    request1.onupgradeneeded = function(event) {
-      const db = event.target.result;
-      const objectStore = db.createObjectStore('audioFiles', { keyPath: 'id' });
-      objectStore.createIndex('name', 'name', { unique: true });
-      objectStore.createIndex('data', 'data', { unique: false });
-    };
+    
     function load() {
-        const db = request1.result;
-        const transaction = db.transaction(['audioFiles'], 'readonly');
-        const objectStore = transaction.objectStore('audioFiles');
-        const request = objectStore.getAll();
+        const request1 = window.indexedDB.open('audioDB', 1);
     
-        request.onsuccess = function(event) {
-            const files = event.target.result;
-            const list = document.getElementById('list');
-            list.innerHTML = '';
-    
-            files.forEach(file => {
-                const li = document.createElement('li');
-                li.textContent = file.name;
-                li.onclick = function() {
-                    const audio = document.getElementById('audio');
-                    audio.src = URL.createObjectURL(new Blob([file.data], { type: 'audio/mpeg' }));
-                    audio.play();
-                };
-                const Button = document.createElement('button');
-                Button.textContent = '删除';
-                Button.onclick = function() {
-                    const transaction = db.transaction(['audioFiles'], 'readwrite');
-                    const objectStore = transaction.objectStore('audioFiles');
-                    const deleteRequest = objectStore.delete(file.id);
-                    deleteRequest.onsuccess = function() {
-                        li.remove();
+         request1.onupgradeneeded = function(event) {
+           const db = event.target.result;
+           const objectStore = db.createObjectStore('audioFiles', { keyPath: 'id' });
+           objectStore.createIndex('name', 'name', { unique: true });
+           objectStore.createIndex('data', 'data', { unique: false });
+         };
+         request1.onsuccess = function(event) {
+            const db = request1.result;
+            const transaction = db.transaction(['audioFiles'], 'readonly');
+            const objectStore = transaction.objectStore('audioFiles');
+            const request = objectStore.getAll();
+        
+            request.onsuccess = function(event) {
+                const files = event.target.result;
+                const list = document.getElementById('list');
+                list.innerHTML = '';
+        
+                files.forEach(file => {
+                    const li = document.createElement('li');
+                    li.textContent = file.name;
+                    li.onclick = function() {
+                        const audio = document.getElementById('audio');
+                        audio.src = URL.createObjectURL(new Blob([file.data], { type: 'audio/mpeg' }));
+                        audio.play();
                     };
+                    const Button = document.createElement('button');
+                    Button.textContent = '删除';
+                    Button.onclick = function() {
+                        const transaction = db.transaction(['audioFiles'], 'readwrite');
+                        const objectStore = transaction.objectStore('audioFiles');
+                        const deleteRequest = objectStore.delete(file.id);
+                        deleteRequest.onsuccess = function() {
+                            li.remove();
+                            Button.remove();
+                            hr.remove();
+                        };
+                    };
+                    
+
+                    const hr = document.createElement('hr');
+                    list.appendChild(li);
+                    list.appendChild(Button);
+                    list.appendChild(hr);
+                });
+
+                const audio = document.getElementById('audio');
+                audio.onended = function() {
+                    const nextIndex = list.querySelector('li:not(.played)') || list.querySelector('li:first-child');
+                    if (nextLi) {
+                        nextLi.click();
+                    }
                 };
-                const hr = document.createElement('hr');
-                list.appendChild(li);
-                list.appendChild(Button);
-                list.appendChild(hr);
-            });
-        }; 
+            }; 
+         }
+        
     }
 
 
@@ -118,6 +135,7 @@ function restoreMusicState() {
 }
  
 // 页面加载完成后恢复音乐状态
-window.addEventListener('load', restoreMusicState);
+
 window.addEventListener('load', load);
+window.addEventListener('load', restoreMusicState);
 </script>
