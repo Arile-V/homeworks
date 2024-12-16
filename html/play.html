@@ -67,7 +67,20 @@
                     audio.src = URL.createObjectURL(new Blob([file.data], { type: 'audio/mpeg' }));
                     audio.play();
                 };
+                const Button = document.createElement('button');
+                Button.textContent = '删除';
+                Button.onclick = function() {
+                    const transaction = db.transaction(['audioFiles'], 'readwrite');
+                    const objectStore = transaction.objectStore('audioFiles');
+                    const deleteRequest = objectStore.delete(file.id);
+                    deleteRequest.onsuccess = function() {
+                        li.remove();
+                    };
+                };
+                const hr = document.createElement('hr');
                 list.appendChild(li);
+                list.appendChild(Button);
+                list.appendChild(hr);
             });
         }; 
     }
