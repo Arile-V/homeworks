@@ -13,11 +13,12 @@
     <form onsubmit="upload()" enctype="multipart/form-data">
         <label for="file">上传MP3:</label>
         <input type="file" name="file" accept="audio/mpeg">
+        <input type="text" name="name" placeholder="请输入课程名">
         <input type="submit" value="上传">
     </form>
     <div id="main" onclick="load()">
-        <ul id="list" >
-        </ul>
+        <div id="list" >
+        </div>
     </div>
     <div id="footer">
         <audio id="audio"  controls></audio>
@@ -30,6 +31,7 @@
     request1.onupgradeneeded = function(event) {
       const db = event.target.result;
       const objectStore = db.createObjectStore('audioFiles', { keyPath: 'id' });
+      objectStore.createIndex('class', 'class', { unique: false , multiEntry: true });
       objectStore.createIndex('name', 'name', { unique: true });
       objectStore.createIndex('data', 'data', { unique: false });
     };
@@ -40,12 +42,12 @@
         const file = fileInput.files[0];
         const reader = new FileReader();
         reader.onload = function(event) {
-            
+            const Class = document.querySelector('input[name="name"]').value;
             const audioData = event.target.result;
             const db = request1.result;
             const transaction = db.transaction(['audioFiles'], 'readwrite');
             const objectStore = transaction.objectStore('audioFiles');
-            const request = objectStore.add({ id: file.name, name: file.name, data: audioData });
+            const request = objectStore.add({ id:Class+'_'+ file.name, class: Class, name: file.name, data: audioData });
             request.onsuccess = function(event) {
                 alert('文件上传成功');
                 load();
@@ -68,8 +70,19 @@ function load() {
         const files = event.target.result;
         const list = document.getElementById('list');
         list.innerHTML = '';
+        let classes = [];
+        files.forEach(file => {
+            const ul = document.createElement('ul');
+            if (!classes.includes(file.class)) {
+                classes.push(file.class);
+                ul.textContent = file.class;
+                ul.className = file.class;
+                list.appendChild(ul);
+            }
+        })
 
         files.forEach(file => {
+            const ul = document.querySelector('.'+file.class);
             const li = document.createElement('li');
             li.textContent = file.name;
             li.onclick = function() {
@@ -77,7 +90,22 @@ function load() {
                 audio.src = URL.createObjectURL(new Blob([file.data], { type: 'audio/mpeg' }));
                 audio.play();
             };
-            list.appendChild(li);
+            const Button = document.createElement('button');
+            Button.textContent = '删除';
+            Button.onclick = function() {
+                const transaction = db.transaction(['audioFiles'], 'readwrite');
+                const objectStore = transaction.objectStore('audioFiles');
+                const deleteRequest = objectStore.delete(file.id);
+                deleteRequest.onsuccess = function() {
+                    li.remove();
+                    Button.remove();
+                    hr.remove();
+                };
+            };
+            ul.appendChild(li);
+            ul.appendChild(Button);
+            const hr = document.createElement('hr');
+            ul.appendChild(hr);
         });
     }; 
     }

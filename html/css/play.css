@@ -70,6 +70,22 @@
     text-align: center;
     padding: 10px;
 }
+#list ul{
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000000;
+  list-style-type: none;
+  display: block;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: rgb(221, 201, 176);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 #list li{
     font-style: normal;
     font-weight: 400;
@@ -83,6 +99,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
+    background-color: #ffffff;
     transition: background-color 0.3s ease;
 }
 #list li:hover{

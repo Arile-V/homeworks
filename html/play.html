@@ -30,8 +30,8 @@
 
     </header>
     <div id="main">
-        <ul id="list" onload=load()>
-        </ul>
+        <div id="list" onload=load()>
+        </div>
     </div>
     <div id="footer">
         <audio id="audio"  controls></audio>
@@ -61,8 +61,19 @@
                 const files = event.target.result;
                 const list = document.getElementById('list');
                 list.innerHTML = '';
-        
+                let classes = [];
                 files.forEach(file => {
+                    const ul = document.createElement('ul');
+                    if (!classes.includes(file.class)) {
+                        classes.push(file.class);
+                        ul.textContent ="课程名称：" + file.class;
+                        ul.className = file.class;
+                        list.appendChild(ul);
+                    }
+                })
+
+                files.forEach(file => {
+                    const ul = document.querySelector('.'+file.class);
                     const li = document.createElement('li');
                     li.textContent = file.name;
                     li.onclick = function() {
@@ -76,24 +87,12 @@
                         audio.play();
                     };
                     
-                    const Button = document.createElement('button');
-                    Button.textContent = '删除';
-                    Button.onclick = function() {
-                        const transaction = db.transaction(['audioFiles'], 'readwrite');
-                        const objectStore = transaction.objectStore('audioFiles');
-                        const deleteRequest = objectStore.delete(file.id);
-                        deleteRequest.onsuccess = function() {
-                            li.remove();
-                            Button.remove();
-                            hr.remove();
-                        };
-                    };
+                   
                     
 
                     const hr = document.createElement('hr');
-                    list.appendChild(li);
-                    list.appendChild(Button);
-                    list.appendChild(hr);
+                    ul.appendChild(li);
+                    ul.appendChild(hr);
                 });
 
                 const audio = document.getElementById('audio');
