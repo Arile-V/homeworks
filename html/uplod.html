@@ -14,16 +14,16 @@
         <label for="file">上传MP3:</label>
         <input type="file" name="file" accept="audio/mpeg">
         <label for="name">课程名:</label>
-        <input type="text" name="name" placeholder="请输入课程名">
+        <select id="classOpt" name="Classes">
+        </select>
         <input type="submit" value="上传">
     </form>
-    <form>
-        <label for="class">课程名:</label>
-        <select id="class">
-        </select>
+    <form onsubmit="addClass()">
+        <label for="classOpt">课程名:</label>
+        <input type="text" name="name" placeholder="请输入课程名">
         <input type="file" name="pic" accept="image/*">
         <input type="text" name="texts" placeholder="请输入要添加的内容">
-        <input type="submit" value="为课程添加">
+        <input type="submit" value="新建课程">
     </form>
     <div id="main" onclick="load()">
         <div id="list" >
@@ -52,7 +52,7 @@
         const file = fileInput.files[0];
         const reader = new FileReader();
         reader.onload = function(event) {
-            const Class = document.querySelector('input[name="name"]').value;
+            const Class = document.querySelector('select[name="Classes"]').value;
             const audioData = event.target.result;
             const db = request1.result;
             const transaction = db.transaction(['audioFiles'], 'readwrite');
@@ -67,6 +67,33 @@
             };
         }
         reader.readAsArrayBuffer(file);
+    }
+
+    function addClass() {
+        const request2 = window.indexedDB.open('classDB',1);
+        request2.onupgradeneeded = function(event) {
+            const db = event.target.result;
+            const objectStore = db.createObjectStore('classes', { keyPath: 'id' });
+            objectStore.createIndex('name', 'name', { unique: true });
+            objectStore.createIndex('pic', 'pic', { unique: false });
+            objectStore.createIndex('texts', 'texts', { unique: false });
+        };
+        request2.onsuccess = function(event) {
+            const db = request2.result;
+            const transaction = db.transaction(['classes'], 'readwrite');
+            const objectStore = transaction.objectStore('classes');
+            const request = objectStore.add({ id: document.querySelector('input[name="name"]').value, 
+                name: document.querySelector('input[name="name"]').value, 
+                pic: document.querySelector('input[name="pic"]').value, 
+                texts: document.querySelector('input[name="texts"]').value });
+            request.onsuccess = function(event) {
+                alert('添加成功');
+                load();
+            };
+            request.onerror = function(event) {
+                alert('添加失败');
+            };
+        };
     }
     
 
@@ -88,14 +115,19 @@
             request.onsuccess = function(event) {
                 const files = event.target.result;
                 const list = document.getElementById('list');
+                const classOpt = document.getElementById('classOpt');
                 list.innerHTML = '';
                 let classes = [];
                 files.forEach(file => {
                     const ul = document.createElement('ul');
+                    const option = document.createElement('option');
                     if (!classes.includes(file.class)) {
                         classes.push(file.class);
                         ul.textContent ="课程名称：" + file.class;
                         ul.className = file.class;
+                        option.value = file.class;
+                        option.textContent = file.class;
+                        classOpt.appendChild(option);
                         list.appendChild(ul);
                     }
                 })
