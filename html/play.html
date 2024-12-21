@@ -30,6 +30,14 @@
 
     </header>
     <div id="main">
+        <h1>课程列表</h1>
+        <form onsubmit="loadAfterSelect(event)">
+            <label for="Classes">选择课程：</label>
+            <select id="classOpt" name="Classes" >
+                <option value="all">all</option>
+            </select>
+            <input type="submit" value="筛选">
+        </form>
         <div id="list" onload=load()>
         </div>
     </div>
@@ -43,6 +51,32 @@
     
     
     function load() {
+        const requestClass = window.indexedDB.open('classDB', 1);
+        requestClass.onupgradeneeded = function(event) {
+            const db = event.target.result;
+            const objectStore = db.createObjectStore('classes', { keyPath: 'id' });
+            objectStore.createIndex('name', 'name', { unique: true });
+            objectStore.createIndex('pic', 'pic', { unique: false });
+            objectStore.createIndex('texts', 'texts', { unique: false });
+        }
+        requestClass.onsuccess = function(event) {
+            const db = requestClass.result;
+            const transaction = db.transaction(['classes'], 'readonly');
+            const objectStore = transaction.objectStore('classes');
+            const request = objectStore.getAll();
+        
+            request.onsuccess = function(event) {
+                const files = event.target.result;
+                const classOpt = document.getElementById('classOpt');
+                files.forEach(file => {
+                    const option = document.createElement('option');
+                    option.value = file.name;
+                    option.textContent = file.name;
+                    classOpt.appendChild(option);
+                });
+            };
+        };
+
         const request1 = window.indexedDB.open('audioDB', 1);
     
          request1.onupgradeneeded = function(event) {
@@ -112,6 +146,57 @@
             }; 
          }
         
+    }
+
+    function loadAfterSelect() {
+        event.preventDefault();
+        const request1 = window.indexedDB.open('audioDB', 1);
+    
+         request1.onupgradeneeded = function(event) {
+           const db = event.target.result;
+           const objectStore = db.createObjectStore('audioFiles', { keyPath: 'id' });
+           objectStore.createIndex('name', 'name', { unique: true });
+           objectStore.createIndex('data', 'data', { unique: false });
+         };
+         
+        request1.onsuccess = function(event) {
+            const db = request1.result;
+            const transaction = db.transaction(['audioFiles'], 'readonly');
+            const objectStore = transaction.objectStore('audioFiles');
+            const request = objectStore.getAll();
+
+            request.onsuccess = function(event) {
+                const files = event.target.result;
+                const list = document.getElementById('list');
+                list.innerHTML = '';
+                
+                const selectedClass = document.getElementById('classOpt').value;
+                if (selectedClass === 'all') {
+                    load();
+                }
+                const ul = document.createElement('ul');
+                ul.textContent = "课程名称：" + selectedClass;
+                ul.className = selectedClass;
+                list.appendChild(ul);
+                files.forEach(file => {
+                    if (file.class === selectedClass) {
+                        const li = document.createElement('li');
+                        li.textContent = file.name;
+                        li.onclick = function() {
+                            act = document.getElementsByClassName('active');
+                            for (let i = 0; i < act.length; i++) {
+                                act[i].classList.remove('active');
+                            }
+                            li.classList.add('active');
+                            const audio = document.getElementById('audio');
+                            audio.src = URL.createObjectURL(new Blob([file.data], { type: 'audio/mpeg' }));
+                            audio.play();
+                        };
+                        ul.appendChild(li);
+                    }
+                });
+            };
+        };
     }
 
 
