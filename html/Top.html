@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <header id="tab">
+        <div class="info">
+            <img id="logo" src="./img/logo.png" alt="logo">
+            <span id="web-name">我的网站</span>
+        </div>
+        <div class="search-box">
+            <form id="searchForm" onsubmit="search(event)">
+                <input type="text" id="searchInput" placeholder="搜索...">
+                <button type="submit">搜索</button>
+            </form>
+        </div>
+        <div class="navbar">
+            <div class="tab-item-active">
+                <a href="" onclick="" >首页</a>
+            </div>
+            <div class="tab-item">
+                <a href="" onclick="">课程列表</a>
+            </div>
+            <div class="tab-item">
+                <a href="" onclick="">播放列表</a>
+            </div>
+            <div class="tab-item">
+                <a href="" onclick="">我的</a>
+            </div>
+        </div>
+
+    </header>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <img id="modalImage" src="" alt="推文头图">
+            <p id="modalContent"></p>
+        </div>
+    </div>
+    <div id="main">
+        
+        <div id="postsContainer"></div>
+        
+    </div>
+</body>
+</html>
+<script >
+    //部分特性的代码可以嵌入，共性代码新建一个和html同名的js文件
+    function loadPosts() {
+        const request = window.indexedDB.open('postsDB', 1);
+    
+        request.onsuccess = function(event) {
+            const db = request.result;
+            const transaction = db.transaction(['posts'], 'readonly');
+            const objectStore = transaction.objectStore('posts');
+            const getRequest = objectStore.getAll();
+    
+            getRequest.onsuccess = function(event) {
+                const posts = event.target.result;
+                const postsContainer = document.getElementById('postsContainer');
+                postsContainer.innerHTML = ''; // 清空现有内容
+    
+                posts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.className = 'post';
+                    postElement.innerHTML = `
+                        <h2>${post.title}</h2>
+                        <img src="${URL.createObjectURL(new Blob([post.image], { type: 'image' }))}" alt="推文头图">
+                        <p>${post.content}</p>
+                    `;
+                    postElement.addEventListener('click', () => showPostDetail(post));
+                    postsContainer.appendChild(postElement);
+                });
+            };
+        };
+    
+        request.onerror = function(event) {
+            alert('数据库打开失败');
+        };
+    }
+    
+    function showPostDetail(post) {
+        const modal = document.getElementById('myModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalImage = document.getElementById('modalImage');
+        const modalContent = document.getElementById('modalContent');
+    
+        modalTitle.textContent = post.title;
+        modalImage.src = URL.createObjectURL(new Blob([post.image], { type: 'image' }));
+        modalContent.textContent = post.content;
+    
+        modal.style.display = 'flex';
+    
+        const closeButton = document.querySelector('.close');
+        closeButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+    
+    window.addEventListener('load', loadPosts);
+    
+</script>
+
+<script src="js/main.js"></script>

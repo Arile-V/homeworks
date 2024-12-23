@@ -108,3 +108,21 @@
     background-color: #555;
     color: #fff;
 }
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 10px;
+  width: 250px; /* 固定宽度 */
+  height: 220px; /* 固定高度 */
+  display: inline-block;
+  text-align: center;
+}
+
+.card img {
+  width: 240px; /* 固定宽度 */
+    height: 180px; /* 固定高度 */
+    object-fit: cover; /* 裁剪图片以填充容器，保持宽高比 */
+    border-radius: 5px; 
+}

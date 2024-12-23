@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索结果</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <header id="tab">
+        <!-- 添加搜索框 -->
+        <div class="search-box">
+            <form id="searchForm" onsubmit="search(event)">
+                <input type="text" id="searchInput" placeholder="搜索...">
+                <button type="submit">搜索</button>
+            </form>
+        </div>
+    </header>
+    <div id="main">
+        <h1>搜索结果</h1>
+        <div id="searchResults"></div>
+    </div>
+</body>
+</html>
+<script src="./js/main.js"></script>
+<script>
+    async function displaySearchResults() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('query');
+        const searchResultsContainer = document.getElementById('searchResults');
+        searchResultsContainer.innerHTML = ''; // 清空之前的搜索结果
+
+        if (query) {
+            const requestClass = window.indexedDB.open('classDB', 1);
+            requestClass.onupgradeneeded = function(event) {
+                const db = event.target.result;
+                const objectStore = db.createObjectStore('classes', { keyPath: 'id' });
+                objectStore.createIndex('name', 'name', { unique: true });
+                objectStore.createIndex('pic', 'pic', { unique: false });
+                objectStore.createIndex('texts', 'texts', { unique: false });
+            }
+            requestClass.onsuccess = function(event) {
+                const db = requestClass.result;
+                const transaction = db.transaction(['classes'], 'readonly');
+                const objectStore = transaction.objectStore('classes');
+                const request = objectStore.getAll();
+            
+                request.onsuccess = function(event) {
+                    const files = event.target.result;
+            
+                    const cardContainer = document.getElementById('searchResults');
+                    cardContainer.innerHTML = ''; // 清空之前的卡片
+                    files.forEach(file => {
+                        if(query.toLowerCase() === file.name.toLowerCase() || file.texts.toLowerCase().includes(query.toLowerCase))
+                        {
+                            const card = document.createElement('div');
+                            card.className = 'card';
+                            const img = document.createElement('img');
+                            img.src = URL.createObjectURL(new Blob([file.pic], { type: 'image' })); // 使用存储的图片URL
+                            img.alt = file.name;
+                            const title = document.createElement('p');
+                            title.textContent = file.name;
+                            card.appendChild(img);
+                            card.appendChild(title);
+                            cardContainer.appendChild(card);
+                        }
+                    });
+                };
+            };
+        }
+    }
+
+    // 在页面加载时显示搜索结果
+    window.addEventListener('load', displaySearchResults);
+</script>

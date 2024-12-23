@@ -31,6 +31,7 @@
     </header>
     <div id="main">
         <h1>课程列表</h1>
+        <div id="card-container"></div>
         <form onsubmit="loadAfterSelect(event)">
             <label for="Classes">选择课程：</label>
             <select id="classOpt" name="Classes" >
@@ -68,11 +69,30 @@
             request.onsuccess = function(event) {
                 const files = event.target.result;
                 const classOpt = document.getElementById('classOpt');
+                classOpt.innerHTML = '';
                 files.forEach(file => {
                     const option = document.createElement('option');
                     option.value = file.name;
                     option.textContent = file.name;
                     classOpt.appendChild(option);
+                });
+        
+                const cardContainer = document.getElementById('card-container');
+                cardContainer.innerHTML = ''; // 清空之前的卡片
+                files.forEach(file => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+        
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(new Blob([file.pic], { type: 'image' })); // 使用存储的图片URL
+                    img.alt = file.name;
+        
+                    const title = document.createElement('p');
+                    title.textContent = file.name;
+        
+                    card.appendChild(img);
+                    card.appendChild(title);
+                    cardContainer.appendChild(card);
                 });
             };
         };
@@ -131,9 +151,6 @@
                     ul.appendChild(hr);
                     
                 });
-                const br = document.createElement('br');
-                ul.appendChild(br);
-                ul.appendChild(br);
                 
 
                 const audio = document.getElementById('audio');

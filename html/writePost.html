@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>撰写推文</title>
+    <link rel="stylesheet" href="./css/writePost.css">
+</head>
+<body>
+    <form onsubmit="submitPost()" enctype="multipart/form-data">
+        <label for="title">推文标题:</label>
+        <input type="text" name="title" required>
+        <label for="content">推文内容:</label>
+        <textarea name="content" required></textarea>
+        <label for="image">推文头图:</label>
+        <input type="file" name="image" accept="image/*" required>
+        <input type="submit" value="发布推文">
+    </form>
+    <script src="./js/writePost.js"></script>
+</body>
+</html>

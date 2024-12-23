@@ -75,7 +75,8 @@
         const nameInput = document.querySelector('input[name="name"]');
         const name = nameInput.value;
         const picInput = document.querySelector('input[name="pic"]');
-        const pic = picInput.files[0] ? URL.createObjectURL(picInput.files[0]) : '';
+        const picFile = picInput.files[0];
+        const pic = new Blob([picFile], { type: 'image' });
         const textInput = document.querySelector('input[name="texts"]');
         const texts = textInput.value;
     
@@ -112,6 +113,7 @@
             alert('数据库打开失败');
         };
     }
+    
      
     
 
