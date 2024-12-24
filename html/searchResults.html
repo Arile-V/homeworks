@@ -58,11 +58,13 @@
                         {
                             const card = document.createElement('div');
                             card.className = 'card';
+                            card.id = file.name;
                             const img = document.createElement('img');
                             img.src = URL.createObjectURL(new Blob([file.pic], { type: 'image' })); // 使用存储的图片URL
                             img.alt = file.name;
                             const title = document.createElement('p');
                             title.textContent = file.name;
+                            title.id = file.name;
                             card.appendChild(img);
                             card.appendChild(title);
                             cardContainer.appendChild(card);

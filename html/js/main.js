@@ -18,3 +18,27 @@ function checkPassword() {
     }
 }
 
+function course(){
+    const courseCards = document.querySelectorAll('.card');
+    console.log(courseCards);
+    if(courseCards.length > 0){
+        courseCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const courseId = card.id;
+                window.location.href = `courseDetail.html?courseId=${courseId}`;
+            });
+        });
+    }
+    const cardLatestclass = document.querySelectorAll('.cardLatestClass');
+    console.log(cardLatestclass);
+    if(cardLatestclass.length > 0){
+        cardLatestclass.forEach(cardLatestclass => {
+            cardLatestclass.addEventListener('click', () => {
+                const courseId = cardLatestclass.id;
+                window.location.href = `courseDetail.html?courseId=${courseId}`;
+            });
+        })
+    }
+    
+}
+

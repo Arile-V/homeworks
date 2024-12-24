@@ -102,6 +102,10 @@
   -webkit-box-orient: vertical;
 }
 
+.post:hover {
+  transform: translateY(-5px);
+}
+
 
 
 .modal {
@@ -161,6 +165,7 @@
 .close:focus {
   color: #000;
   text-decoration: none;
+  transform: translateY(-5px);
 }
 
 
@@ -219,86 +224,98 @@ button[type="submit"]:hover {
   font-size: 2em;
 }
 
-
-
-/* homeworks/html/css/main.css */
+#loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 1s ease-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 2em;
+}
 
 .card {
   position: relative;
-  width: 300px; /* 卡片宽度 */
-  height: 200px; /* 卡片高度 */
-  background-color: #ffffff; /* 卡片背景色 */
-  border: 1px solid #e0e0e0; /* 卡片边框 */
-  border-radius: 8px; /* 卡片圆角 */
-  overflow: hidden; /* 隐藏超出卡片的内容 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 卡片阴影 */
-  margin: 10px; /* 卡片外边距 */
-  transition: transform 0.3s ease; /* 卡片动画 */
+  width: 300px; 
+  height: 200px;
+  background-color: #ffffff; 
+  border: 1px solid #e0e0e0; 
+  border-radius: 8px; 
+  overflow: hidden; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px; 
+  transition: transform 0.3s ease; 
 }
 
 .card img {
-  width: 100%; /* 图片宽度 */
-  height: 150px; /* 图片高度 */
-  object-fit: cover; /* 图片适应容器 */
+  width: 100%;
+  height: 150px; 
+  object-fit: cover; 
 }
 
 .card p {
-  margin: 0; /* 段落外边距 */
-  padding: 10px; /* 段落内边距 */
-  font-size: 16px; /* 字体大小 */
-  color: #333333; /* 字体颜色 */
+  margin: 0; 
+  padding: 10px; 
+  font-size: 16px;
+  color: #333333; 
 }
 
 .card:hover {
-  transform: translateY(-5px); /* 卡片悬停动画 */
+  transform: translateY(-5px);
 }
 
-/* homeworks/html/css/main.css */
 
 .cardLatestClass {
   position: relative;
-  width: 300px; /* 卡片宽度 */
-  height: 400px; /* 卡片高度 */
-  background-color: #ffffff; /* 卡片背景色 */
-  border: 1px solid #e0e0e0; /* 卡片边框 */
-  border-radius: 8px; /* 卡片圆角 */
-  overflow: hidden; /* 隐藏超出卡片的内容 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 卡片阴影 */
-  margin: 10px; /* 卡片外边距 */
-  transition: transform 0.3s ease; /* 卡片动画 */
+  width: 300px;
+  height: 400px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px; 
+  overflow: hidden; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px; 
+  transition: transform 0.3s ease; 
   display: inline-flex;
   flex-direction: column;
 }
 
 .cardLatestClass img {
-  width: 100%; /* 图片宽度 */
-  height: 200px; /* 图片高度 */
-  object-fit: cover; /* 图片适应容器 */
+  width: 100%;
+  height: 200px; 
+  object-fit: cover; 
 }
 
 .cardLatestClass .title {
-  margin: 10px 0; /* 标题外边距 */
-  padding: 0 10px; /* 标题内边距 */
-  font-size: 20px; /* 标题字体大小 */
-  color: #333333; /* 标题字体颜色 */
-  font-weight: bold; /* 标题字体加粗 */
+  margin: 10px 0; 
+  padding: 0 10px; 
+  font-size: 20px; 
+  color: #333333; 
+  font-weight: bold; 
 }
 
 .cardLatestClass .description {
-  margin: 0; /* 描述外边距 */
-  padding: 0 10px; /* 描述内边距 */
-  font-size: 16px; /* 描述字体大小 */
-  color: #666666; /* 描述字体颜色 */
-  line-height: 1.6; /* 描述行高 */
+  margin: 0; 
+  padding: 0 10px; 
+  font-size: 16px; 
+  color: #666666; 
+  line-height: 1.6; 
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* 限制最多显示三行 */
+  -webkit-line-clamp: 3; 
   -webkit-box-orient: vertical;
 }
 
 .cardLatestClass:hover {
-  transform: translateY(-5px); /* 卡片悬停动画 */
+  transform: translateY(-5px); 
 }
 
 .login {
@@ -353,3 +370,115 @@ button[type="submit"]:hover {
 .password-input button:hover {
   background-color: #0056b3;
 }
+
+#footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  color: #f3eeee;
+  text-align: center;
+  padding: 10px;
+}
+
+#audio{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  color: #f3eeee;
+  text-align: center;
+  padding: 10px;
+}
+#list{
+  display: inline-block;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: #ffffff;
+  color: #f3eeee;
+  text-align: center;
+  padding: 10px;
+  overflow:visible;
+}
+#list ul{
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 24px;
+color: #000000;
+list-style-type: none;
+display: block;
+margin: 10px;
+padding: 10px;
+border: 1px solid #ccc;
+background-color: rgb(221, 201, 176);
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+#list li{
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000000;
+  list-style-type: none;
+  display: block;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+#list li:hover{
+  background-color: #555;
+  color: #fff;
+}
+#list li.active{
+  background-color: #555;
+  color: #fff;
+}
+
+#images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+#images img {
+  object-fit: cover;
+  width: 100%;
+  max-width: 300px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+#images img:hover {
+  transform: scale(1.05);
+}
+
+#courseDetail {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+#courseDetail h2 {
+    margin-top: 0;
+    color: #007bff;
+}
+
+#courseDetail p {
+    line-height: 1.6;
+    margin: 10px 0;
+}
+

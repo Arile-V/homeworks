@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
+    <div id="loading"></div>
     <header id="tab">
         <div class="info">
             <img id="logo" src="./img/logo.png" alt="logo">
@@ -67,26 +68,46 @@
                 files.forEach(file => {
                     const card = document.createElement('div');
                     card.className = 'card';
-        
+                    card.id = file.name;
                     const img = document.createElement('img');
                     img.src = URL.createObjectURL(new Blob([file.pic], { type: 'image' })); // 使用存储的图片URL
                     img.alt = file.name;
         
                     const title = document.createElement('p');
                     title.textContent = file.name;
-        
+                    title.className = 'title';
+                    title.id = file.name;
+
                     card.appendChild(img);
                     card.appendChild(title);
                     cardContainer.appendChild(card);
                 });
             };
         };
-     }
+    }
         
-    
+    function removeLoadingOverlay() { //开幕
+        const loadingOverlay = document.getElementById('loading');
+        loadingOverlay.style.opacity = '0';
+        loadingOverlay.addEventListener('transitionend', () => {
+            loadingOverlay.style.display = 'none';
+        });
+    }
+    function show(){
 
-
-window.addEventListener('load', load);
+        removeLoadingOverlay();
+        course();
+        document.removeEventListener('click', show);
+        
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        load();
+        document.addEventListener('click', show);
+        setTimeout(() => {
+            const elementToClick = document.getElementById('loading');
+            elementToClick.click();
+        }, 10);
+    });
 
 
     

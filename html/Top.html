@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="js/main.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,6 +63,7 @@
     
 </body>
 </html>
+
 <script >
     //部分特性的代码可以嵌入，共性代码新建一个和html同名的js文件
 
@@ -75,13 +77,14 @@
     function show(){
 
         removeLoadingOverlay();
-        loadPosts();
-        load();
+        course();
         document.removeEventListener('click', show);
+        
     }
     document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('click',show);
-       
+        loadPosts();
+        load();
     });
 
 
@@ -170,7 +173,7 @@
                     if (counter >= numberOfFilesToShow) return;
                     const card = document.createElement('div');
                     card.className = 'cardLatestClass';
-        
+                    card.id = file.name;
                     const img = document.createElement('img');
                     img.src = URL.createObjectURL(new Blob([file.pic], { type: 'image' })); // 使用存储的图片URL
                     img.alt = file.name;
@@ -178,6 +181,7 @@
                     const title = document.createElement('p');
                     title.textContent = file.name;
                     title.className = 'title'
+                    title.id = file.name;
                     
                     const texts = document.createElement('p');
                     texts.textContent = file.texts;
@@ -195,5 +199,3 @@
         };
     }
 </script>
-
-<script src="js/main.js"></script>
