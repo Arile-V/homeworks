@@ -32,6 +32,8 @@
         searchResultsContainer.innerHTML = ''; // 清空之前的搜索结果
 
         if (query) {
+            const searchs = document.getElementById('searchInput');
+            searchs.value = query;
             const requestClass = window.indexedDB.open('classDB', 1);
             requestClass.onupgradeneeded = function(event) {
                 const db = event.target.result;
@@ -52,7 +54,7 @@
                     const cardContainer = document.getElementById('searchResults');
                     cardContainer.innerHTML = ''; // 清空之前的卡片
                     files.forEach(file => {
-                        if(query.toLowerCase() === file.name.toLowerCase() || file.texts.toLowerCase().includes(query.toLowerCase))
+                        if(query.toLowerCase() === file.name.toLowerCase() || file.name.toLowerCase().includes(query.toLowerCase()))
                         {
                             const card = document.createElement('div');
                             card.className = 'card';
