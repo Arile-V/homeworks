@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <header id="tab">
+        <div class="info">
+            <img id="logo" src="./img/logo.png" alt="logo">
+            <span id="web-name">我的网站</span>
+        </div>
+        <div class="search-box">
+            <form id="searchForm" onsubmit="search(event)">
+                <input type="text" id="searchInput" placeholder="搜索...">
+                <button type="submit">搜索</button>
+            </form>
+        </div>
+        <div class="navbar">
+            <div class="tab-item">
+                <a href="" onclick="" >首页</a>
+            </div>
+            <div class="tab-item-active">
+                <a href="" onclick="">课程列表</a>
+            </div>
+            <div class="tab-item">
+                <a href="" onclick="">播放列表</a>
+            </div>
+            <div class="tab-item">
+                <a href="" onclick="">我的</a>
+            </div>
+        </div>
+
+    </header>
+    <div id="login" class="login">
+        <div class="password-input">
+            <label for="adminPassword">管理员密码</label>
+            <input type="password" id="adminPassword" placeholder="输入管理员密码">
+            <button onclick="checkPassword()">Submit</button>
+        </div>
+    </div>
+    <div id="main">
+        <div id="user-info"></div>
+
+        <div class="creation-center">
+            <h2>创作中心</h2>
+            <ul>
+                <li><a href="upload.html">上传稿件</a></li>
+                <li><a href="writePost.html">撰写推文</a></li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>
+<script src="./js/main.js"></script>
+<script >
+
+</script>

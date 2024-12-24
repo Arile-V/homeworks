@@ -7,5 +7,14 @@ function search(event) {
 }
 
 
+function checkPassword() {
+    const enteredPassword = document.getElementById('adminPassword').value;
+    const correctPassword = 'admin123';
 
+    if (enteredPassword === correctPassword) {
+        document.getElementById('login').style.display = 'none';
+    } else {
+        alert('Incorrect password. Please try again.');
+    }
+}
 

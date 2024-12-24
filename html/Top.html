@@ -8,7 +8,18 @@
     <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
-    <div id="loadingOverlay"></div>
+    <div id="loadingOverlay">
+        <h1>苟日新，日日新。</h1>
+        <p>欢迎</p>
+    </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <img id="modalImage" src="" alt="推文头图">
+            <p id="modalContent"></p>
+        </div>
+    </div>
     <header id="tab">
         <div class="info">
             <img id="logo" src="./img/logo.png" alt="logo">
@@ -20,6 +31,7 @@
                 <button type="submit">搜索</button>
             </form>
         </div>
+       
         <div class="navbar">
             <div class="tab-item-active">
                 <a href="" onclick="" >首页</a>
@@ -36,14 +48,7 @@
         </div>
 
     </header>
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="modalTitle"></h2>
-            <img id="modalImage" src="" alt="推文头图">
-            <p id="modalContent"></p>
-        </div>
-    </div>
+    
     <div id="main">
         <header id="header">
             <h1>最新课程</h1>
@@ -53,14 +58,14 @@
             <h1>最新资讯</h1>
         </header>
         <div id="postsContainer"></div>
-        
     </div>
+    
 </body>
 </html>
 <script >
     //部分特性的代码可以嵌入，共性代码新建一个和html同名的js文件
 
-    function removeLoadingOverlay() {
+    function removeLoadingOverlay() { //开幕
         const loadingOverlay = document.getElementById('loadingOverlay');
         loadingOverlay.style.opacity = '0';
         loadingOverlay.addEventListener('transitionend', () => {
@@ -70,7 +75,8 @@
     function show(){
 
         removeLoadingOverlay();
-        loadPosts(); // 确保在揭幕效果完成后加载帖子
+        loadPosts();
+        load();
         document.removeEventListener('click', show);
     }
     document.addEventListener('DOMContentLoaded', () => {
@@ -137,7 +143,6 @@
         });
     }
     
-    window.addEventListener('load', loadPosts);
     
     function load() {
         const requestClass = window.indexedDB.open('classDB', 1);
@@ -189,7 +194,6 @@
             };
         };
     }
-    window.addEventListener('load', load);
 </script>
 
 <script src="js/main.js"></script>
