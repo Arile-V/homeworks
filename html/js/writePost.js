@@ -1,12 +1,4 @@
 function submitPost() {
-    event.preventDefault();
-    const title = document.querySelector('input[name="title"]').value;
-    const content = document.querySelector('textarea[name="content"]').value;
-    const imageFile = document.querySelector('input[name="image"]').files[0];
-    const reader = new FileReader();
-    
-    reader.onload = function(event) {
-        const imageData = event.target.result;
         const request = window.indexedDB.open('postsDB', 1);
 
         request.onupgradeneeded = function(event) {
@@ -21,7 +13,11 @@ function submitPost() {
             const db = request.result;
             const transaction = db.transaction(['posts'], 'readwrite');
             const objectStore = transaction.objectStore('posts');
-            const addRequest = objectStore.add({ title: title, content: content, image: imageData });
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const image = document.getElementById('image').files[0];
+            const pic = new Blob([image], { type: 'image' });
+            const addRequest = objectStore.add({ title: title, content: content, image: pic});
 
             addRequest.onsuccess = function(event) {
                 alert('推文发布成功');
@@ -36,7 +32,4 @@ function submitPost() {
         request.onerror = function(event) {
             alert('数据库打开失败');
         };
-    };
-
-    reader.readAsArrayBuffer(imageFile);
 }
