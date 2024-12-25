@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <header id="tab">
+        <div class="info">
+            <img id="logo" src="../img/logo.png" alt="logo">
+            <span id="web-name">我的网站</span>
+        </div>
+        <div class="navbar">
+            <div class="tab-item">
+                <a href="Top.html" onclick="" >首页</a>
+            </div>
+            <div class="tab-item">
+                <a href="FL.html" onclick="">分类</a>
+            </div>
+            <div class="tab-item-active">
+                <a href="playlist.html" onclick="">播放列表</a>
+            </div>
+            <div class="tab-item">
+                <a href="Account.html" onclick="">我的</a>
+            </div>
+        </div>
+
+    </header>
+    <div id="main">
+        <div id="list" onload=load()>
+        </div>
+    </div>
+    <div id="footer">
+        <audio id="audio"  controls></audio>
+    </div>
+</body>
+<script>
+    function load() {
+        const request1 = window.indexedDB.open('audioDB', 1);
+    
+        request1.onupgradeneeded = function(event) {
+          const db = event.target.result;
+          const objectStore = db.createObjectStore('audioFiles', { keyPath: 'id' });
+          objectStore.createIndex('class', 'class', { unique: false , multiEntry: true });
+          objectStore.createIndex('name', 'name', { unique: true });
+          objectStore.createIndex('data', 'data', { unique: false });
+          objectStore.createIndex('list', 'list', { unique: false });
+        };
+         request1.onsuccess = function(event) {
+            const db = request1.result;
+            const transaction = db.transaction(['audioFiles'], 'readonly');
+            const objectStore = transaction.objectStore('audioFiles');
+            const request = objectStore.getAll();
+        
+            request.onsuccess = function(event) {
+                const files = event.target.result;
+                const list = document.getElementById('list');
+                list.innerHTML = '';
+                const ul = document.createElement('ul');
+                        ul.className = 'in_lists';
+                
+
+                files.forEach(file => {
+                    if(file.list){
+                        
+                        const li = document.createElement('li');
+                        li.textContent = file.name;
+                        li.onclick = function() {
+                            act = document.getElementsByClassName('active');
+                            for (let i = 0; i < act.length; i++) {
+                                act[i].classList.remove('active');
+                            }
+                            li.classList.add('active');
+                            const audio = document.getElementById('audio');
+                            audio.src = URL.createObjectURL(new Blob([file.data], { type: 'audio/mpeg' }));
+                            audio.play();
+                        };
+
+                    
+                        const button = document.createElement('button');
+                        button.textContent = '移除';
+                        button.onclick = function() {
+                            const transaction = db.transaction(['audioFiles'], 'readwrite');
+                            const objectStore = transaction.objectStore('audioFiles');
+                            const request = objectStore.get(file.id);
+                            request.onsuccess = function() {
+                                const request = objectStore.put({ id:file.id, class: file.class, name: file.name, data: file.data ,list: !file.list});
+                                li.remove();
+                            };
+                        };
+                        const hr = document.createElement('hr');
+
+                        li.appendChild(button);
+
+                        ul.appendChild(li);
+
+                        ul.appendChild(hr);
+
+                        list.appendChild(ul);
+                    }
+                    
+                });
+                
+
+                const audio = document.getElementById('audio');
+                audio.onended = function() {
+                    const nextIndex = list.querySelector('li:not(.played)') || list.querySelector('li:first-child');
+                    if (nextLi) {
+                        nextLi.click();
+                    }
+                };
+            }; 
+         }
+        
+    }
+
+    addEventListener('DOMContentLoaded', load);
+</script>
+</html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,16 +22,16 @@
         </div>
         <div class="navbar">
             <div class="tab-item">
-                <a href="" onclick="" >首页</a>
+                <a href="Top.html" onclick="" >首页</a>
             </div>
             <div class="tab-item-active">
-                <a href="" onclick="">课程列表</a>
+                <a href="FL.html" onclick="">分类</a>
             </div>
             <div class="tab-item">
-                <a href="" onclick="">播放列表</a>
+                <a href="playlist.html" onclick="">播放列表</a>
             </div>
             <div class="tab-item">
-                <a href="" onclick="">我的</a>
+                <a href="Account.html" onclick="">我的</a>
             </div>
         </div>
 
@@ -57,6 +57,7 @@
             objectStore.createIndex('name', 'name', { unique: true });
             objectStore.createIndex('pic', 'pic', { unique: false });
             objectStore.createIndex('texts', 'texts', { unique: false });
+            objectStore.createIndex('tags', 'tags', { unique: false });
         }
         requestClass.onsuccess = function(event) {
             const db = requestClass.result;
@@ -68,7 +69,40 @@
                 const files = event.target.result;
                 const cardContainer = document.getElementById('card-container');
                 cardContainer.innerHTML = ''; // 清空之前的卡片
+                const tag = [];
                 files.forEach(file => {
+                    if (!tag.includes(file.tags)) {
+                        const tagElement = document.createElement('div');
+                        tagElement.className = 'tag';
+                        tagElement.textContent = file.tags;
+                        tagElement.id = file.tags;
+                        tagElement.onclick = function() {
+                            const tag = this.id;
+                            const cardContainer = document.getElementById('card-container');
+                            cardContainer.innerHTML = ''; // 清空之前的卡片
+                            const courseCard = [];
+                            files.forEach(file =>{
+                                if(file.tags === tag){
+                                    const card = document.createElement('div');
+                                    card.className = 'card';
+                                    card.id = file.name;
+                                    const img = document.createElement('img');
+                                    img.src = URL.createObjectURL(new Blob([file.pic], { type: 'image' })); // 使用存储的图片URL
+                                    img.alt = file.name;
+                                    const title = document.createElement('p');
+                                    title.textContent = file.name;
+                                    title.className = 'title';
+                                    title.id = file.name;
+                                    card.appendChild(img);
+                                    card.appendChild(title);
+                                    cardContainer.appendChild(card);
+                                    courseCard.push(card);
+                                }
+                                
+                            });
+                        };
+
+                    }
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.id = file.name;
@@ -80,7 +114,10 @@
                     title.textContent = file.name;
                     title.className = 'title';
                     title.id = file.name;
-
+                    card.addEventListener('click', function() {
+                        const courseId = card.id;
+                        window.location.href = `courseDetail.html?courseId=${courseId}`;
+                    });
                     card.appendChild(img);
                     card.appendChild(title);
                     cardContainer.appendChild(card);
@@ -99,20 +136,14 @@
     function show(){
 
         removeLoadingOverlay();
-        course();
         document.removeEventListener('click', show);
         
     }
     document.addEventListener('DOMContentLoaded', () => {
+       
         load();
-        document.addEventListener('click', show);
-        setTimeout(() => {
-            const elementToClick = document.getElementById('loading');
-            elementToClick.click();
-        }, 10);
+        show();
     });
-
-
     
 </script>
 

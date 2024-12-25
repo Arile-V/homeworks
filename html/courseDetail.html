@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -45,9 +45,7 @@
         <div id="list">
         </div>
     </div>
-    <div id="footer">
-        <audio id="audio"  controls></audio>
-    </div>
+    <audio id="audio"  controls></audio>
 </body>
 </html>
 <script src="./js/main.js"></script>
@@ -91,18 +89,18 @@
                 files.forEach(file  => {
                     if (file.name === name) {
                     const img = document.createElement('img');
-                    img.src = URL.createObjectURL(new Blob([file.pic], { type: 'image' })); // 使用存储的图片URL
+                    img.src = URL.createObjectURL(new Blob([file.pic], { type: 'image' }));
                     img.alt = file.name;
         
-                    if (file.pdf) {
-                        const pdf = document.createElement('embed');
-                        pdf.src = URL.createObjectURL(new Blob([file.pdf], { type: 'application/pdf' })); // 使用存储的图片URL
-                        pdf.alt = file.name;
-                        pdf.width = '100%';
-                        pdf.height = '600px';
-                        const pdfs = document.getElementById('pdf');
-                        pdfs.appendChild(pdf);
-                    }
+                    
+                    const pdf = document.createElement('embed');
+                    pdf.src = URL.createObjectURL(new Blob([file.pdf], { type: 'application/pdf' })); 
+                    pdf.alt = file.name;
+                    pdf.width = '100%';
+                    pdf.height = '600px';
+                    const pdfs = document.getElementById('pdf');
+                    pdfs.appendChild(pdf);
+                    
                     
 
                     const title = document.createElement('h2');
@@ -172,6 +170,17 @@
                             audio.src = URL.createObjectURL(new Blob([file.data], { type: 'audio/mpeg' }));
                             audio.play();
                         };
+                        const button = document.createElement('button');
+                        button.textContent = '入列';
+                        button.onclick = function() {
+                            const transaction = db.transaction(['audioFiles'], 'readwrite');
+                            const objectStore = transaction.objectStore('audioFiles');
+                            const request = objectStore.get(file.id);
+                            request.onsuccess = function() {
+                                const request = objectStore.put({ id:file.id, class: file.class, name: file.name, data: file.data ,list: !file.list});
+                            };
+                        }
+                        li.appendChild(button);
                         const hr = document.createElement('hr');
                         ul.appendChild(li);
                         ul.appendChild(hr);

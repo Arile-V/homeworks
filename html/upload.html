@@ -1,7 +1,7 @@
 <!--这个html用于传mp3文件，后续如果有其他类型数据同样不要写死在代码里面-->
 <!--暂时使用前端本地存储实现，后面可以转流媒体-->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -51,6 +51,7 @@
       objectStore.createIndex('class', 'class', { unique: false , multiEntry: true });
       objectStore.createIndex('name', 'name', { unique: true });
       objectStore.createIndex('data', 'data', { unique: false });
+      objectStore.createIndex('list', 'list', { unique: false });
     };
 
     function upload(){
@@ -64,7 +65,7 @@
             const db = request1.result;
             const transaction = db.transaction(['audioFiles'], 'readwrite');
             const objectStore = transaction.objectStore('audioFiles');
-            const request = objectStore.add({ id:Class+'_'+ file.name, class: Class, name: file.name, data: audioData });
+            const request = objectStore.add({ id:Class+'_'+ file.name, class: Class, name: file.name, data: audioData ,list:false});
             request.onsuccess = function(event) {
                 alert('文件上传成功');
                 load();
@@ -107,13 +108,15 @@
             const db = request.result;
             const transaction = db.transaction(['classes'], 'readwrite');
             const objectStore = transaction.objectStore('classes');
-            const addRequest = objectStore.add({ id: name, name: name, pic: pic, texts: texts });
+            const addRequest = objectStore.add({ id: name, name: name, pic: pic, texts: texts , type: type, pdf: pdf });
     
             addRequest.onsuccess = function(event) {
                 alert('课程创建成功');
                 nameInput.value = '';
                 picInput.value = '';
                 textInput.value = '';
+                typeInput.value = '';
+                pdfInput.value = '';
                 load(); // 更新课程列表
             };
     
@@ -242,7 +245,7 @@
         
     }
 
-   //window.addEventListener('load', load);
+   window.addEventListener('load', load);
     
 
     

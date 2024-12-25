@@ -19,6 +19,7 @@ function checkPassword() {
 }
 
 function course(){
+    
     const courseCards = document.querySelectorAll('.card');
     console.log(courseCards);
     if(courseCards.length > 0){
@@ -39,6 +40,5 @@ function course(){
             });
         })
     }
-    
 }
 
