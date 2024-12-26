@@ -489,3 +489,42 @@ transition: background-color 0.3s ease;
   text-align: center;
   padding: 10px;
 }
+
+aside {
+  width: 20%; 
+  padding: 10px;
+  box-sizing: border-box; 
+  float: left;
+}
+
+article {
+  width: 80%; 
+  padding: 10px; 
+  box-sizing: border-box;
+  float: left; 
+}
+
+#tag-list {
+  list-style-type: none; 
+  padding: 0; 
+}
+
+#tag-list li {
+  padding: 5px; 
+  margin-bottom: 5px; 
+  background-color: #f0f0f0; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  transition: background-color 0.3s; 
+}
+
+#tag-list li:hover {
+  background-color: #e0e0e0; 
+}
+
+#cardcontainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0;
+}

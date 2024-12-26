@@ -37,10 +37,11 @@
 
     </header>
     <div id="main">
-        <aside>
-            <div class="tags"></div>
+        <aside id="selecter">
+            <ul id="tag-list">
+            </ul>
         </aside>
-        <article>
+        <article id="maincard">
             <div id="card-container"></div>
         </article>
     </div>
@@ -71,8 +72,42 @@
                 cardContainer.innerHTML = ''; // 清空之前的卡片
                 const tag = [];
                 files.forEach(file => {
+                    if (!tag.includes("全部")) {
+                        const ul = document.getElementById('tag-list');
+                        const tagElement = document.createElement('li');
+                        tagElement.className = 'tag';
+                        tagElement.textContent = "全部";
+                        tagElement.id = "全部";
+                        tagElement.onclick = function() {
+                            const tag = this.id;
+                            const cardContainer = document.getElementById('card-container');
+                            cardContainer.innerHTML = ''; // 清空之前的卡片
+                            const courseCard = [];
+                            files.forEach(file =>{
+                                if(file.tags === tag || tag === '全部'){
+                                    const card = document.createElement('div');
+                                    card.className = 'card';
+                                    card.id = file.name;
+                                    const img = document.createElement('img');
+                                    img.src = URL.createObjectURL(new Blob([file.pic], { type: 'image' })); // 使用存储的图片URL
+                                    img.alt = file.name;
+                                    const title = document.createElement('p');
+                                    title.textContent = file.name;
+                                    title.className = 'title';
+                                    title.id = file.name;
+                                    card.appendChild(img);
+                                    card.appendChild(title);
+                                    cardContainer.appendChild(card);
+                                    courseCard.push(card);
+                                }
+                            });
+                        }
+                        ul.appendChild(tagElement);
+                        tag.push("全部");
+                    }
                     if (!tag.includes(file.tags)) {
-                        const tagElement = document.createElement('div');
+                        const ul = document.getElementById('tag-list');
+                        const tagElement = document.createElement('li');
                         tagElement.className = 'tag';
                         tagElement.textContent = file.tags;
                         tagElement.id = file.tags;
@@ -82,7 +117,7 @@
                             cardContainer.innerHTML = ''; // 清空之前的卡片
                             const courseCard = [];
                             files.forEach(file =>{
-                                if(file.tags === tag){
+                                if(file.tags === tag || tag === '全部'){
                                     const card = document.createElement('div');
                                     card.className = 'card';
                                     card.id = file.name;
@@ -101,6 +136,8 @@
                                 
                             });
                         };
+                        ul.appendChild(tagElement);
+                        tag.push(file.tags);
 
                     }
                     const card = document.createElement('div');

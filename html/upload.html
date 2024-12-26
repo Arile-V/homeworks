@@ -23,10 +23,10 @@
         <label for = "pic">课程封面</label>
         <input type="file" name="pic" accept="image/*">
         <input type="text" name="texts" placeholder="请输入要添加的内容">
-        <select id="typeOpt" name="Classes">
-            <option value="0">课本导读</option>
-            <option value="1">课外阅读</option>
-            <option value="2">解题技巧</option>
+        <select id="typeOpt" name="Tags">
+            <option value="课本导读">课本导读</option>
+            <option value="课外阅读">课外阅读</option>
+            <option value="解题技巧">解题技巧</option>
         </select>
         <label for="pdfs">上传课程pdf材料:</label>
         <input type="file" name="pdfs" accept="pdf/*">
@@ -86,8 +86,8 @@
         const pic = new Blob([picFile], { type: 'image' });
         const textInput = document.querySelector('input[name="texts"]');
         const texts = textInput.value;
-        const typeInput = document.querySelector('select[name="Classes"]');
-        const type = typeInput.value;
+        const typeInput = document.querySelector('select[name="Tags"]');
+        const tags = typeInput.value;
         const pdfInput = document.querySelector('input[name="pdfs"]');
         const pdfFile = pdfInput.files[0];
         const pdf = new Blob([pdfFile], { type: 'application/pdf' });
@@ -100,7 +100,7 @@
             objectStore.createIndex('name', 'name', { unique: true });
             objectStore.createIndex('pic', 'pic', { unique: false });
             objectStore.createIndex('texts', 'texts', { unique: false });
-            objectStore.createIndex('tags', 'typeInput', { unique: false });
+            objectStore.createIndex('tags', 'tags', { unique: false });
             objectStore.createIndex('pdf', 'pdf', { unique: false });
         };
     
@@ -108,7 +108,7 @@
             const db = request.result;
             const transaction = db.transaction(['classes'], 'readwrite');
             const objectStore = transaction.objectStore('classes');
-            const addRequest = objectStore.add({ id: name, name: name, pic: pic, texts: texts , type: type, pdf: pdf });
+            const addRequest = objectStore.add({ id: name, name: name, pic: pic, texts: texts , tags: tags, pdf: pdf });
     
             addRequest.onsuccess = function(event) {
                 alert('课程创建成功');

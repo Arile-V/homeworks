@@ -1,4 +1,5 @@
 function submitPost() {
+    event.preventDefault();
         const request = window.indexedDB.open('postsDB', 1);
 
         request.onupgradeneeded = function(event) {
@@ -13,9 +14,9 @@ function submitPost() {
             const db = request.result;
             const transaction = db.transaction(['posts'], 'readwrite');
             const objectStore = transaction.objectStore('posts');
-            const title = document.getElementById('title').value;
-            const content = document.getElementById('content').value;
-            const image = document.getElementById('image').files[0];
+            const title = document.querySelector('input[name="title"]').value;
+            const content = document.querySelector('textarea[name="content"]').value;
+            const image = document.querySelector('input[name="image"]').files[0];
             const pic = new Blob([image], { type: 'image' });
             const addRequest = objectStore.add({ title: title, content: content, image: pic});
 
