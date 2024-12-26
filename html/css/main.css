@@ -242,6 +242,9 @@ button[type="submit"]:hover {
 }
 
 .card {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: space-between;
   position: relative;
   width: 300px; 
   height: 200px;
@@ -527,4 +530,5 @@ article {
   flex-wrap: wrap;
   justify-content: space-between;
   margin: 20px 0;
+  flex-direction: row;
 }
